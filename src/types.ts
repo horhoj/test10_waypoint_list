@@ -1,4 +1,7 @@
 export interface Waypoint {
-  id: number;
   title: string;
+}
+
+export interface WaypointsData {
+  [keys: number]: Waypoint;
 }
