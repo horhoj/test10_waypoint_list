@@ -1,4 +1,10 @@
 import { FC, useState, KeyboardEvent } from 'react';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 import { WaypointsData } from '../../types';
 import styles from './WaypointList.module.scss';
 
@@ -49,6 +55,17 @@ export const WaypointList: FC<WaypointListProps> = ({
     setWaypointsData(newWaypointsData);
   };
 
+  const handleDragEnd = ({ destination, source }: DropResult) => {
+    const destinationIndex = destination?.index;
+    if (!(typeof destinationIndex === 'number')) {
+      return;
+    }
+    const newWaypointIdList: number[] = [...waypointIdList];
+    const moved = newWaypointIdList.splice(source.index, 1);
+    newWaypointIdList.splice(destinationIndex, 0, ...moved);
+    setWaypointIdList(newWaypointIdList);
+  };
+
   return (
     <div className={styles.wrap}>
       <div>
@@ -61,20 +78,49 @@ export const WaypointList: FC<WaypointListProps> = ({
           onKeyDown={handleInputKeyDown}
         />
       </div>
-      <ul className={styles.waypointList}>
-        {waypointIdList.map((waypointId) => (
-          <li key={waypointId} className={styles.waypointItem}>
-            {waypointsData[waypointId].title}
-            <button
-              type={'button'}
-              className={styles.deleteItemButton}
-              onClick={() => handleDeleteItem(waypointId)}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable
+          type="statusLane"
+          droppableId={'waypoint-list-droppable'}
+          direction="vertical"
+        >
+          {(columnDroppableProvided) => (
+            <ul
+              className={styles.waypointList}
+              {...columnDroppableProvided.droppableProps}
+              ref={columnDroppableProvided.innerRef}
             >
-              X
-            </button>
-          </li>
-        ))}
-      </ul>
+              {waypointIdList.map((waypointId, index) => (
+                <Draggable
+                  key={waypointId}
+                  draggableId={waypointId.toString()}
+                  index={index}
+                >
+                  {(columnDraggableProvided) => (
+                    <li
+                      key={waypointId}
+                      className={styles.waypointItem}
+                      ref={columnDraggableProvided.innerRef}
+                      {...columnDraggableProvided.dragHandleProps}
+                      {...columnDraggableProvided.draggableProps}
+                    >
+                      {waypointsData[waypointId].title}
+                      <button
+                        type={'button'}
+                        className={styles.deleteItemButton}
+                        onClick={() => handleDeleteItem(waypointId)}
+                      >
+                        X
+                      </button>
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {columnDroppableProvided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };
