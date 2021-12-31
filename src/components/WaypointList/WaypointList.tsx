@@ -1,4 +1,4 @@
-import { FC, useState, KeyboardEvent } from 'react';
+import { FC, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -7,6 +7,7 @@ import {
 } from 'react-beautiful-dnd';
 import { WaypointsData } from '../../types';
 import styles from './WaypointList.module.scss';
+import { Input } from './Input';
 
 interface WaypointListProps {
   waypointsData: WaypointsData;
@@ -21,14 +22,9 @@ export const WaypointList: FC<WaypointListProps> = ({
   setWaypointsData,
   waypointsData,
 }) => {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [editItemId, setEditItemId] = useState<number | null>(null);
 
-  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    const newWaypointTitle = inputValue.trim();
-    //прерываем если нажат не клавиша Enter или введено пустое, или состоящее из пробелов значение
-    if (e.key !== 'Enter' || !newWaypointTitle) {
-      return;
-    }
+  const handleAddItem = (newWaypointTitle: string) => {
     const currentMaxId = Math.max(...waypointIdList);
     let newId = 1;
     // так как Math.max может возвращать странные значения типа -Infinity и NaN,
@@ -42,10 +38,13 @@ export const WaypointList: FC<WaypointListProps> = ({
     };
     setWaypointsData(newWaypointsData);
     setWaypointIdList([...waypointIdList, newId]);
-    setInputValue('');
   };
 
   const handleDeleteItem = (id: number) => {
+    const msg = `Удалить точку пути с названием "${waypointsData[id].title}"`;
+    if (!confirm(msg)) {
+      return;
+    }
     const newWaypointIdList = waypointIdList.filter(
       (waypointId) => waypointId !== id,
     );
@@ -53,6 +52,15 @@ export const WaypointList: FC<WaypointListProps> = ({
     const newWaypointsData = { ...waypointsData };
     delete newWaypointsData[id];
     setWaypointsData(newWaypointsData);
+  };
+
+  const handlePostItem = (id: number, newTitle: string) => {
+    const newWaypointsData: WaypointsData = {
+      ...waypointsData,
+      [id]: { ...waypointsData[id], title: newTitle },
+    };
+    setWaypointsData(newWaypointsData);
+    setEditItemId(null);
   };
 
   const handleDragEnd = ({ destination, source }: DropResult) => {
@@ -69,14 +77,7 @@ export const WaypointList: FC<WaypointListProps> = ({
   return (
     <div className={styles.wrap}>
       <div>
-        <input
-          type="text"
-          className={styles.input}
-          placeholder={'введите новую точку'}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleInputKeyDown}
-        />
+        <Input onEnterNewValue={handleAddItem} />
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
@@ -95,23 +96,39 @@ export const WaypointList: FC<WaypointListProps> = ({
                   key={waypointId}
                   draggableId={waypointId.toString()}
                   index={index}
+                  isDragDisabled={editItemId !== null}
                 >
                   {(columnDraggableProvided) => (
                     <li
                       key={waypointId}
-                      className={styles.waypointItem}
                       ref={columnDraggableProvided.innerRef}
                       {...columnDraggableProvided.dragHandleProps}
                       {...columnDraggableProvided.draggableProps}
                     >
-                      {waypointsData[waypointId].title}
-                      <button
-                        type={'button'}
-                        className={styles.deleteItemButton}
-                        onClick={() => handleDeleteItem(waypointId)}
-                      >
-                        X
-                      </button>
+                      {editItemId === waypointId ? (
+                        <Input
+                          autoFocus={true}
+                          defaultValue={waypointsData[waypointId].title}
+                          onEnterNewValue={(newValue) => {
+                            handlePostItem(waypointId, newValue);
+                          }}
+                          onCancel={() => setEditItemId(null)}
+                        />
+                      ) : (
+                        <span
+                          className={styles.waypointItem}
+                          onDoubleClick={() => setEditItemId(waypointId)}
+                        >
+                          {waypointsData[waypointId].title}
+                          <button
+                            type={'button'}
+                            className={styles.deleteItemButton}
+                            onClick={() => handleDeleteItem(waypointId)}
+                          >
+                            X
+                          </button>
+                        </span>
+                      )}
                     </li>
                   )}
                 </Draggable>

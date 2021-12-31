@@ -12,36 +12,29 @@
   }
 }
 
-.input {
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 16px;
-  border: 2px solid #777;
-  outline: none;
-
-  &:focus {
-    border: 2px solid #111;
-  }
-}
-
 .waypointList {
   margin-top: 20px;
   list-style: none;
   display: flex;
   flex-direction: column;
+
+  & > li {
+    margin-top: 10px;
+  }
 }
 
+
 .waypointItem {
+  display: block;
   background-color: #fff;
-  margin-top: 10px;
+
   border: 2px solid #777;
   padding: 10px 40px 10px 20px;
   border-radius: 10px;
   overflow: hidden;
-  flex-wrap: wrap;
   text-overflow: ellipsis;
   position: relative;
+  user-select: none;
 }
 
 .deleteItemButton {
