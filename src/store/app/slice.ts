@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WaypointsData } from '../../types';
+import { WaypointIdList, WaypointLocation, WaypointsData } from '../../types';
+import { DEFAULT_LOCATION } from '../../config';
 
 interface AppState {
-  waypointIdList: number[];
+  waypointIdList: WaypointIdList;
   waypointsData: WaypointsData;
+  currentMapCenter: WaypointLocation;
 }
 
 const initialState: AppState = {
@@ -14,12 +16,17 @@ const initialState: AppState = {
     3: { title: 'Точка маршрута 3' },
     4: { title: 'Точка маршрута 4' },
   },
+  currentMapCenter: DEFAULT_LOCATION,
 };
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    setCurrentMapCenter: (state, action: PayloadAction<WaypointLocation>) => {
+      state.currentMapCenter = action.payload;
+    },
+
     addWaypoint: (state, action: PayloadAction<string>) => {
       const currentMaxId = Math.max(...state.waypointIdList);
       let newId = 1;
