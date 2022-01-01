@@ -5,39 +5,19 @@ import {
   Draggable,
   DropResult,
 } from 'react-beautiful-dnd';
-import { WaypointsData } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions, appSelectors } from '../../store/app';
 import styles from './WaypointList.module.scss';
 import { Input } from './Input';
 
-interface WaypointListProps {
-  waypointsData: WaypointsData;
-  setWaypointsData(waypointsData: WaypointsData): void;
-  waypointIdList: number[];
-  setWaypointIdList(waypointIdList: number[]): void;
-}
-
-export const WaypointList: FC<WaypointListProps> = ({
-  waypointIdList,
-  setWaypointIdList,
-  setWaypointsData,
-  waypointsData,
-}) => {
+export const WaypointList: FC = () => {
   const [editItemId, setEditItemId] = useState<number | null>(null);
+  const waypointsData = useAppSelector(appSelectors.getWaypointsData);
+  const waypointIdList = useAppSelector(appSelectors.getWaypointIdList);
+  const dispatch = useAppDispatch();
 
   const handleAddItem = (newWaypointTitle: string) => {
-    const currentMaxId = Math.max(...waypointIdList);
-    let newId = 1;
-    // так как Math.max может возвращать странные значения типа -Infinity и NaN,
-    //то соответственно делаем проверку на эти значения
-    if (!Number.isNaN(currentMaxId) && !(currentMaxId === -Infinity)) {
-      newId = currentMaxId + 1;
-    }
-    const newWaypointsData: WaypointsData = {
-      ...waypointsData,
-      [newId]: { title: newWaypointTitle },
-    };
-    setWaypointsData(newWaypointsData);
-    setWaypointIdList([...waypointIdList, newId]);
+    dispatch(appActions.addWaypoint(newWaypointTitle));
   };
 
   const handleDeleteItem = (id: number) => {
@@ -45,21 +25,11 @@ export const WaypointList: FC<WaypointListProps> = ({
     if (!confirm(msg)) {
       return;
     }
-    const newWaypointIdList = waypointIdList.filter(
-      (waypointId) => waypointId !== id,
-    );
-    setWaypointIdList(newWaypointIdList);
-    const newWaypointsData = { ...waypointsData };
-    delete newWaypointsData[id];
-    setWaypointsData(newWaypointsData);
+    dispatch(appActions.deleteWaypoint(id));
   };
 
-  const handlePostItem = (id: number, newTitle: string) => {
-    const newWaypointsData: WaypointsData = {
-      ...waypointsData,
-      [id]: { ...waypointsData[id], title: newTitle },
-    };
-    setWaypointsData(newWaypointsData);
+  const handlePatchItem = (id: number, newTitle: string) => {
+    dispatch(appActions.editWaypoint({ id, newTitle }));
     setEditItemId(null);
   };
 
@@ -68,10 +38,13 @@ export const WaypointList: FC<WaypointListProps> = ({
     if (!(typeof destinationIndex === 'number')) {
       return;
     }
-    const newWaypointIdList: number[] = [...waypointIdList];
-    const moved = newWaypointIdList.splice(source.index, 1);
-    newWaypointIdList.splice(destinationIndex, 0, ...moved);
-    setWaypointIdList(newWaypointIdList);
+
+    dispatch(
+      appActions.dragWaypoint({
+        oldIndex: source.index,
+        newIndex: destinationIndex,
+      }),
+    );
   };
 
   return (
@@ -110,7 +83,7 @@ export const WaypointList: FC<WaypointListProps> = ({
                           autoFocus={true}
                           defaultValue={waypointsData[waypointId].title}
                           onEnterNewValue={(newValue) => {
-                            handlePostItem(waypointId, newValue);
+                            handlePatchItem(waypointId, newValue);
                           }}
                           onCancel={() => setEditItemId(null)}
                         />
