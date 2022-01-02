@@ -21,10 +21,6 @@ export const WaypointList: FC = () => {
   };
 
   const handleDeleteItem = (id: number) => {
-    // const msg = `Удалить точку пути с названием "${waypointsData[id].title}"`;
-    // if (!confirm(msg)) {
-    //   return;
-    // }
     dispatch(appActions.deleteWaypoint(id));
   };
 
@@ -81,10 +77,7 @@ export const WaypointList: FC = () => {
                       {...columnDraggableProvided.dragHandleProps}
                       {...columnDraggableProvided.draggableProps}
                     >
-                      <span
-                        className={styles.waypointItem}
-                        onDoubleClick={() => setEditItemId(waypointId)}
-                      >
+                      <span className={styles.waypointItem}>
                         <span className={styles.waypointItemTitle}>
                           <span>{index + 1}.&nbsp;</span>
                           {editItemId === waypointId ? (
@@ -108,6 +101,13 @@ export const WaypointList: FC = () => {
                           {', '}
                           {waypointsData[waypointId].location[1].toFixed(2)}]
                         </span>
+                        <button
+                          type={'button'}
+                          className={styles.patchItemButton}
+                          onClick={() => setEditItemId(waypointId)}
+                        >
+                          E
+                        </button>
                         <button
                           type={'button'}
                           className={styles.deleteItemButton}

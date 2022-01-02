@@ -1,11 +1,13 @@
+@import "../../styles/variables";
+
 .wrap {
-  margin: 100px auto 0;
+  margin: 10px auto 0;
   max-width: 1024px;
   display: flex;
   gap: 10px;
   padding: 10px;
 
-  @media screen and (max-width: 700px) {
-    flex-direction: column;
+  @media screen and (max-width: $WAYPOINT) {
+    flex-direction: column-reverse;
   }
 }

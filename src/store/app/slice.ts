@@ -38,7 +38,7 @@ export const appSlice = createSlice({
 
       state.currentMapCenter = [
         state.currentMapCenter[0],
-        state.currentMapCenter[1] + 0.1,
+        state.currentMapCenter[1] + 0.05,
       ];
 
       state.waypointsData[newId] = {
