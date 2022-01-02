@@ -21,15 +21,15 @@ export const WaypointList: FC = () => {
   };
 
   const handleDeleteItem = (id: number) => {
-    const msg = `Удалить точку пути с названием "${waypointsData[id].title}"`;
-    if (!confirm(msg)) {
-      return;
-    }
+    // const msg = `Удалить точку пути с названием "${waypointsData[id].title}"`;
+    // if (!confirm(msg)) {
+    //   return;
+    // }
     dispatch(appActions.deleteWaypoint(id));
   };
 
   const handlePatchItem = (id: number, newTitle: string) => {
-    dispatch(appActions.editWaypoint({ id, newTitle }));
+    dispatch(appActions.editWaypointTitle({ id, newTitle }));
     setEditItemId(null);
   };
 
@@ -50,7 +50,10 @@ export const WaypointList: FC = () => {
   return (
     <div className={styles.wrap}>
       <div>
-        <Input onEnterNewValue={handleAddItem} />
+        <Input
+          onEnterNewValue={handleAddItem}
+          className={styles.inputAddWaypoint}
+        />
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
@@ -78,30 +81,41 @@ export const WaypointList: FC = () => {
                       {...columnDraggableProvided.dragHandleProps}
                       {...columnDraggableProvided.draggableProps}
                     >
-                      {editItemId === waypointId ? (
-                        <Input
-                          autoFocus={true}
-                          defaultValue={waypointsData[waypointId].title}
-                          onEnterNewValue={(newValue) => {
-                            handlePatchItem(waypointId, newValue);
-                          }}
-                          onCancel={() => setEditItemId(null)}
-                        />
-                      ) : (
-                        <span
-                          className={styles.waypointItem}
-                          onDoubleClick={() => setEditItemId(waypointId)}
-                        >
-                          {waypointsData[waypointId].title}
-                          <button
-                            type={'button'}
-                            className={styles.deleteItemButton}
-                            onClick={() => handleDeleteItem(waypointId)}
-                          >
-                            X
-                          </button>
+                      <span
+                        className={styles.waypointItem}
+                        onDoubleClick={() => setEditItemId(waypointId)}
+                      >
+                        <span className={styles.waypointItemTitle}>
+                          <span>{index + 1}.&nbsp;</span>
+                          {editItemId === waypointId ? (
+                            <Input
+                              className={styles.inputEditWaypointTitle}
+                              autoFocus={true}
+                              defaultValue={waypointsData[waypointId].title}
+                              onEnterNewValue={(newValue) => {
+                                handlePatchItem(waypointId, newValue);
+                              }}
+                              onCancel={() => setEditItemId(null)}
+                            />
+                          ) : (
+                            <span className={styles.inputEditWaypointTitleSpan}>
+                              {waypointsData[waypointId].title}
+                            </span>
+                          )}
                         </span>
-                      )}
+                        <span className={styles.waypointItemLocation}>
+                          [{waypointsData[waypointId].location[0].toFixed(2)}
+                          {', '}
+                          {waypointsData[waypointId].location[1].toFixed(2)}]
+                        </span>
+                        <button
+                          type={'button'}
+                          className={styles.deleteItemButton}
+                          onClick={() => handleDeleteItem(waypointId)}
+                        >
+                          X
+                        </button>
+                      </span>
                     </li>
                   )}
                 </Draggable>

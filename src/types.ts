@@ -1,5 +1,6 @@
 export interface Waypoint {
   title: string;
+  location: WaypointLocation;
 }
 
 export interface WaypointsData {

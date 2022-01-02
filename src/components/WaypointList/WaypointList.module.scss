@@ -23,6 +23,34 @@
   }
 }
 
+.inputAddWaypoint {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  border: 2px solid #777;
+  outline: none;
+
+  &:focus {
+    border: 2px solid #111;
+  }
+}
+
+.inputEditWaypointTitle {
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid red;
+}
+
+.inputEditWaypointTitleSpan {
+  display: block;
+  border-bottom: 2px solid #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .waypointItem {
   display: block;
@@ -31,8 +59,7 @@
   border: 2px solid #777;
   padding: 10px 40px 10px 20px;
   border-radius: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
   position: relative;
   user-select: none;
 }
@@ -51,5 +78,14 @@
   &:hover {
     background-color: rgba(200, 0, 0, 1);
   }
+}
 
+.waypointItemTitle {
+  display: flex;
+}
+
+.waypointItemLocation {
+  display: block;
+  margin-top: 5px;
+  font-size: 80%;
 }

@@ -1,11 +1,11 @@
 import { FC, KeyboardEvent, useState } from 'react';
-import styles from './Input.module.scss';
 
 interface InputProps {
   onEnterNewValue(value: string): void;
   autoFocus?: boolean;
   defaultValue?: string;
   onCancel?(): void;
+  className?: string;
 }
 
 export const Input: FC<InputProps> = ({
@@ -13,6 +13,7 @@ export const Input: FC<InputProps> = ({
   autoFocus = false,
   defaultValue = '',
   onCancel = null,
+  className = '',
 }) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
 
@@ -29,7 +30,7 @@ export const Input: FC<InputProps> = ({
   return (
     <input
       type="text"
-      className={styles.input}
+      className={className}
       placeholder={'введите новую точку'}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
