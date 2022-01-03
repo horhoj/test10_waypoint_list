@@ -6,17 +6,9 @@
   border-radius: 10px;
   padding: 10px;
   overflow: hidden;
+  //min-height: 300px;
   max-height: $WAYPOINT;
-
+  height: fit-content;
 }
 
-.mapWrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow: hidden;
-  border-radius: 10px;
-  aspect-ratio: 1;
-
-}
 

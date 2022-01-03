@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { YMaps, Map, Placemark, MapState, Polyline } from 'react-yandex-maps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions, appSelectors } from '../../store/app';
@@ -41,10 +41,32 @@ export const MapViewer: FC = () => {
     polylineGeometry.push(waypointsData[waypointId].location);
   });
 
+  //этот код нужен для адекватного выравнивания размеров карты
+  const mapWrapRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number>(671);
+  const resize = useCallback(() => {
+    if (mapWrapRef.current) {
+      const { width } = mapWrapRef.current.getBoundingClientRect();
+      setWidth(width);
+    }
+  }, []);
+
+  useEffect(() => {
+    resize();
+  }, [waypointIdList]);
+
+  useEffect(() => {
+    resize();
+    window.addEventListener('resize', resize);
+    return () => {
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} style={{ minHeight: `${width + 20}px` }}>
       <YMaps>
-        <div className={styles.mapWrap}>
+        <div ref={mapWrapRef}>
           <Map
             onActionEnd={(e: any) => {
               const centerCoordinates: WaypointLocation =
@@ -52,8 +74,8 @@ export const MapViewer: FC = () => {
               dispatch(appActions.setCurrentMapCenter(centerCoordinates));
             }}
             defaultState={DEFAULT_MAP_STATE}
-            width={`100%`}
-            height={`100%`}
+            width={`${width}px`}
+            height={`${width}px`}
           >
             {waypointIdList.map((waypointId, index) => (
               <Placemark
