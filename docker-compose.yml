@@ -21,14 +21,14 @@ services:
     volumes:
       - ./:/home/node/app
     ports:
-      - "3000:3000"
+      - "3004:3000"
     tty: true
   #nginx
   nginx_front:
     build:
       context: docker/nginx
     ports:
-      - "80:80"
+      - "84:80"
     volumes:
       - ./:/var/www/
 #    networks:
