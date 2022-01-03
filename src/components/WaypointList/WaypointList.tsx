@@ -49,6 +49,7 @@ export const WaypointList: FC = () => {
         <Input
           onEnterNewValue={handleAddItem}
           className={styles.inputAddWaypoint}
+          dataTestId={'add_new_waypoint_title_input'}
         />
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -76,6 +77,7 @@ export const WaypointList: FC = () => {
                       ref={columnDraggableProvided.innerRef}
                       {...columnDraggableProvided.dragHandleProps}
                       {...columnDraggableProvided.draggableProps}
+                      data-testid={`waypoint_item=${waypointId}`}
                     >
                       <span className={styles.waypointItem}>
                         <span className={styles.waypointItemTitle}>
@@ -112,6 +114,7 @@ export const WaypointList: FC = () => {
                           type={'button'}
                           className={styles.deleteItemButton}
                           onClick={() => handleDeleteItem(waypointId)}
+                          data-testid={`delete_waypoint_item_btn=${waypointId}`}
                         >
                           X
                         </button>

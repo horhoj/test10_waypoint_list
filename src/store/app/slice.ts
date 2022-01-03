@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WaypointIdList, WaypointLocation, WaypointsData } from '../../types';
-import { DEFAULT_LOCATION } from '../../config';
+import {
+  DEFAULT_LOCATION,
+  DEFAULT_WAYPOINT_ID_LIST,
+  DEFAULT_WAYPOINTS_DATA,
+} from '../../config';
 
 interface AppState {
   waypointIdList: WaypointIdList;
@@ -9,13 +13,8 @@ interface AppState {
 }
 
 const initialState: AppState = {
-  waypointIdList: [1, 2, 3, 4],
-  waypointsData: {
-    1: { title: 'Точка маршрута 1', location: [55.65, 37.17] },
-    2: { title: 'Точка маршрута 2', location: [55.55, 37.27] },
-    3: { title: 'Точка маршрута 3', location: [55.75, 37.37] },
-    4: { title: 'Точка маршрута 4', location: [55.72, 37.47] },
-  },
+  waypointIdList: DEFAULT_WAYPOINT_ID_LIST,
+  waypointsData: DEFAULT_WAYPOINTS_DATA,
   currentMapCenter: DEFAULT_LOCATION,
 };
 

@@ -6,6 +6,10 @@ interface InputProps {
   defaultValue?: string;
   onCancel?(): void;
   className?: string;
+  dataTestId?: string;
+}
+interface DynamicProps {
+  ['data-testid']?: string;
 }
 
 export const Input: FC<InputProps> = ({
@@ -14,8 +18,15 @@ export const Input: FC<InputProps> = ({
   defaultValue = '',
   onCancel = null,
   className = '',
+  dataTestId = '',
 }) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
+
+  //добавляем пропсы которые должны существовать только при некоторых условиях
+  const conditionalProps: DynamicProps = {};
+  if (dataTestId) {
+    conditionalProps['data-testid'] = dataTestId;
+  }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     const newWaypointTitle = inputValue.trim();
@@ -39,6 +50,7 @@ export const Input: FC<InputProps> = ({
       onBlur={() => {
         onCancel && onCancel();
       }}
+      {...conditionalProps}
     />
   );
 };

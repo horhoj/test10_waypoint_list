@@ -38,3 +38,5 @@ format:
 test:
 	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "yarn test"
 
+test-coverage:
+	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "yarn test-coverage"

@@ -28,7 +28,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext .js,.ts,.tsx,.jsx  --fix",
-    "format": "prettier --write \"./src/**/**.{ts,tsx,js,jsx,json}\""
+    "format": "prettier --write \"./src/**/**.{ts,tsx,js,jsx,json}\"",
+    "test-coverage": "react-scripts test --coverage"
   },
   "eslintConfig": {
     "extends": [
