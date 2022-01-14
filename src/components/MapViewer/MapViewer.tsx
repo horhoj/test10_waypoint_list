@@ -5,17 +5,14 @@ import { appActions, appSelectors } from '../../store/app';
 import { DEFAULT_LOCATION } from '../../config';
 import { WaypointLocation } from '../../types';
 import styles from './MapViewer.module.scss';
+import { getBalloonContent, getHintContent, getIconContent } from './helpers';
 
 const DEFAULT_MAP_STATE: MapState = {
   center: DEFAULT_LOCATION,
   zoom: 9,
 };
 
-const getHintContent = (hint: string): string =>
-  `<p style='font-size: 130%; padding: 5px'>${hint}</p>`;
-
-const getBalloonContent = (WL: WaypointLocation): string =>
-  `<p>[${WL[0].toFixed(2)}, ${WL[1].toFixed(2)}]</p>`;
+const MIN_MAP_WIDTH = 671;
 
 export const MapViewer: FC = () => {
   const dispatch = useAppDispatch();
@@ -43,7 +40,7 @@ export const MapViewer: FC = () => {
 
   //этот код нужен для адекватного выравнивания размеров карты
   const mapWrapRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState<number>(671);
+  const [width, setWidth] = useState<number>(MIN_MAP_WIDTH);
   const resize = useCallback(() => {
     if (mapWrapRef.current) {
       const { width } = mapWrapRef.current.getBoundingClientRect();
@@ -77,31 +74,41 @@ export const MapViewer: FC = () => {
             width={`${width}px`}
             height={`${width}px`}
           >
-            {waypointIdList.map((waypointId, index) => (
-              <Placemark
-                key={waypointId}
-                geometry={waypointsData[waypointId].location}
-                options={{
-                  draggable: true,
-                }}
-                properties={{
-                  iconContent: (index + 1).toString(),
-                  hintContent: getHintContent(waypointsData[waypointId].title),
-                  balloonContentHeader: waypointsData[waypointId].title,
-                  balloonContent: getBalloonContent(
-                    waypointsData[waypointId].location,
-                  ),
-                }}
-                onDragEnd={handlePlaceMarkDragEnd(waypointId)}
-                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
-              />
-            ))}
+            {waypointIdList.map((waypointId) => {
+              const coordinatesTextView = getBalloonContent(
+                waypointsData[waypointId].location,
+              );
+              return (
+                <Placemark
+                  key={waypointId}
+                  geometry={waypointsData[waypointId].location}
+                  options={{
+                    draggable: true,
+                    preset: 'islands#blueStretchyIcon',
+                  }}
+                  properties={{
+                    iconContent: getIconContent(
+                      waypointsData,
+                      coordinatesTextView,
+                      waypointId,
+                    ),
+                    hintContent: getHintContent(
+                      waypointsData[waypointId].title,
+                    ),
+                    balloonContentHeader: waypointsData[waypointId].title,
+                    balloonContent: coordinatesTextView,
+                  }}
+                  onDragEnd={handlePlaceMarkDragEnd(waypointId)}
+                  modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
+                />
+              );
+            })}
             <Polyline
               geometry={polylineGeometry}
               options={{
                 balloonCloseButton: false,
                 strokeColor: '#090',
-                strokeWidth: 10,
+                strokeWidth: 7,
                 strokeOpacity: 0.8,
               }}
             />

@@ -81,7 +81,7 @@ export const WaypointList: FC = () => {
                     >
                       <span className={styles.waypointItem}>
                         <span className={styles.waypointItemTitle}>
-                          <span>{index + 1}.&nbsp;</span>
+                          {/*<span>{index + 1}.&nbsp;</span>*/}
                           {editItemId === waypointId ? (
                             <Input
                               className={styles.inputEditWaypointTitle}
