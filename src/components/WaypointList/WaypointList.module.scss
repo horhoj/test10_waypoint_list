@@ -14,14 +14,21 @@
   }
 }
 
+.waypointListHelper {
+  margin-top: 10px;
+  padding: 3px;
+  font-size: 80%;
+  color: #eee;
+}
+
 .waypointList {
-  margin-top: 20px;
   list-style: none;
   display: flex;
   flex-direction: column;
+  //background-color: red;
 
   & > li {
-    margin-top: 10px;
+    padding: 5px 0;
   }
 }
 

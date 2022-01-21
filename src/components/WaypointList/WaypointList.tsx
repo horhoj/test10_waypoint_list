@@ -52,6 +52,10 @@ export const WaypointList: FC = () => {
           dataTestId={'add_new_waypoint_title_input'}
         />
       </div>
+      <div className={styles.waypointListHelper}>
+        Перетащите для изменения порядка. Маршрут будет перестроен
+        автоматически.
+      </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           type="statusLane"

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { YMaps, Map, Placemark, MapState, Polyline } from 'react-yandex-maps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions, appSelectors } from '../../store/app';
@@ -61,7 +61,8 @@ export const MapViewer: FC = () => {
   }, []);
 
   return (
-    <div className={styles.wrap} style={{ minHeight: `${width + 20}px` }}>
+    <div className={styles.wrap} style={{ minHeight: `${width + 40}px` }}>
+      <div className={styles.helper}>метки на карте можно перетаскивать</div>
       <YMaps>
         <div ref={mapWrapRef}>
           <Map
