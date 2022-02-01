@@ -1,10 +1,10 @@
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { store } from '../../store';
-import { WaypointList } from '../WaypointList';
-import { DEFAULT_WAYPOINT_ID_LIST, DEFAULT_WAYPOINTS_DATA } from '../../config';
+import { store } from '../store';
+import { WaypointList } from '../components/WaypointList';
+import { DEFAULT_WAYPOINT_ID_LIST, DEFAULT_WAYPOINTS_DATA } from '../config';
 import '@testing-library/jest-dom/extend-expect';
-import { Waypoint, WaypointIdList, WaypointLocation } from '../../types';
+import { Waypoint, WaypointIdList, WaypointLocation } from '../types';
 
 const getLocationText = (location: WaypointLocation): string => {
   return `[${location[0]}, ${location[1]}]`;
